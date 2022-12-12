@@ -15,6 +15,7 @@ namespace HotelListing.IRepository
              List<string> includes = null);
         Task<T> GetbyId(Expression<Func<T, bool>> expression, List<string> includes = null);
         Task Add(T entity);
+        Task AddRangeAsync(IEnumerable<T> entities);
         Task Delete(int id);
 
         void DeleteRange(IEnumerable<T> entities);

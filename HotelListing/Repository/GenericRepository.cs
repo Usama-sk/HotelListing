@@ -27,6 +27,11 @@ namespace HotelListing.Repository
             await _dbSet.AddAsync(entity);
         }
 
+        public async Task AddRangeAsync(IEnumerable<T> entities)
+        {
+            await _dbSet.AddRangeAsync(entities);
+        }
+
         public async Task Delete(int id)
         {
             var entity = await _dbSet.FindAsync(id);
@@ -69,13 +74,8 @@ namespace HotelListing.Repository
             }
 
             if (orderBy != null)
-            {
-                foreach (var includeProperty in includes)
-                {
+            {   
                     query = orderBy(query);
-
-                }
-
             }
 
             return await query.AsNoTracking().ToListAsync();

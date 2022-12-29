@@ -31,18 +31,11 @@ namespace HotelListing.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetCities()
         {
-            try
-            {
+           
                 var cities = await _unitofWork.Cities.GetAll();
                 var results = _mapper.Map<IList<CityDTO>>(cities);
                 return Ok(results);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Something is went wrong in the {nameof(GetCities)}");
-                return StatusCode(500, "Internal Server Error, Please Try Again Later");
-
-            }
+          
         }
         [Authorize]
         [HttpGet("{id:int}" , Name="GetCity")]
@@ -51,18 +44,10 @@ namespace HotelListing.Controllers
         public async Task<IActionResult> GetCity(int id)
         {
 
-            try
-            {
                 var city = await _unitofWork.Cities.GetbyId(x => x.Id == id, new List<string> { "Country" });
                 var result = _mapper.Map<CityDTO>(city);
                 return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Something is went wrong in the {nameof(GetCity)}");
-                return StatusCode(500, "Internal Server Error, Please Try Again Later");
-
-            }
+         
         }
    
         [HttpPost ]
@@ -79,8 +64,7 @@ namespace HotelListing.Controllers
                 return BadRequest(ModelState);
             }
            
-            try
-            {
+          
                 var cities = await _unitofWork.Cities.GetAll();
                 foreach (var _city in cities)
                 {
@@ -93,13 +77,7 @@ namespace HotelListing.Controllers
                 await _unitofWork.Cities.Add(city);
                 await _unitofWork.Save();
                 return CreatedAtRoute("GetCity",new { id = city.Id},city);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Something is went wrong in the {nameof(CreateCity)}");
-                return StatusCode(500, "Internal Server Error, Please Try Again Later");
-
-            }
+           
         }
 
         [HttpPut("{id:int}")]
@@ -116,16 +94,15 @@ namespace HotelListing.Controllers
                 _logger.LogInformation($"Invalid Update Attempt in {nameof(UpdateCity)}");
                 return BadRequest(ModelState);
             }
-            try
+          
+                 var cities = await _unitofWork.Cities.GetAll();
+            foreach (var _city in cities)
             {
-                var cities = await _unitofWork.Cities.GetAll();
-                foreach (var _city in cities)
+                if (_city.CountryId == cityDTO.CountryId && _city.Name == cityDTO.Name)
                 {
-                    if (_city.CountryId == cityDTO.CountryId && _city.Name == cityDTO.Name)
-                    {
-                        return BadRequest("City is already Exist");
-                    }
+                    return BadRequest("City is already Exist");
                 }
+            }
                 var city = await _unitofWork.Cities.GetbyId(x=>x.Id == id );
                 if (city == null)
                 {
@@ -136,14 +113,32 @@ namespace HotelListing.Controllers
                 _unitofWork.Cities.Update(city);
                 await _unitofWork.Save();
                 return NoContent();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Something is went wrong in the {nameof(UpdateCity)}");
-                return StatusCode(500, "Internal Server Error, Please Try Again Later");
-
-            }
+         
         }
 
+        [HttpDelete("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> DeleteCity(int id)
+        {
+            if (id < 1)
+            {
+                _logger.LogInformation($"Invalid Delete Attempt in {nameof(DeleteCity)}");
+                return BadRequest();
+            }
+
+            var country = await _unitofWork.Cities.GetbyId(x => x.Id == id);
+            if (country == null)
+            {
+                _logger.LogInformation($"Invalid Delete Attempt in {nameof(DeleteCity)}");
+                return BadRequest("Submitted data is invalid");
+            }
+            await _unitofWork.Cities.Delete(id);
+            await _unitofWork.Save();
+            return NoContent();
+
+
+        }
     }
 }

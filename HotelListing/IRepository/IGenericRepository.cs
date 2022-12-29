@@ -3,6 +3,8 @@ using System.Linq.Expressions;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
+using HotelListing.Data;
+using X.PagedList;
 
 namespace HotelListing.IRepository
 {
@@ -13,6 +15,10 @@ namespace HotelListing.IRepository
              Expression<Func<T, bool>> expression = null,
              Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
              List<string> includes = null);
+        Task<IPagedList<T>> GetPagedList(
+            RequestParams requestParams,
+            List<string> includes = null
+            );
         Task<T> GetbyId(Expression<Func<T, bool>> expression, List<string> includes = null);
         Task Add(T entity);
         Task AddRangeAsync(IEnumerable<T> entities);

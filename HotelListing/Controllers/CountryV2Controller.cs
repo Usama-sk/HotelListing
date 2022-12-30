@@ -1,18 +1,11 @@
-﻿using AutoMapper;
-using HotelListing.Data;
-using HotelListing.DTOModels;
-using HotelListing.IRepository;
+﻿using DataServiceLayer.DataService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using System;
-using HotelListing.DataServiecsLayer;
 
 namespace HotelListing.Controllers
 {
-  //  [ApiVersion("2.0" , Deprecated =true)]  // if we go for 3.0 version and 2.0 does not have longer support
+    //  [ApiVersion("2.0" , Deprecated =true)]  // if we go for 3.0 version and 2.0 does not have longer support
     [ApiVersion("2.0")]
     [Route("api/country")]
     [ApiController]

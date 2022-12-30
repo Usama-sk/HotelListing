@@ -1,18 +1,17 @@
 ﻿using AutoMapper;
-using HotelListing.Data;
-using HotelListing.DTOModels;
-using HotelListing.IRepository;
-using HotelListing.Services;
+using Infrasturcture.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using DataModels.Models;
+using DataModels.DTOModels;
 using System;
 using System.Threading.Tasks;
 
 namespace HotelListing.Controllers
-{ 
-    
+{
+
 
     [Route("api/[controller]")]
     [ApiController]
